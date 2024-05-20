@@ -59,12 +59,10 @@ config = {
         "flame": {
             "sample_as_light": True,
             "strength": 5000,
-            "anim_interpolation": 'CONSTANT',
         },
         "flame2": {
             "sample_as_light": True,
             "strength": 5000,
-            "anim_interpolation": 'CONSTANT',
         },
         "lavaball": {
             "strength": 1000,
@@ -200,6 +198,7 @@ config = {
                 "tlight01": {
                     "strength": 2000,
                     "tint": [1, 0.8, 1, 1],
+                    "sample_as_light": True,
                 },
                 "tlight02": {
                     "strength": 500,
@@ -256,7 +255,14 @@ config = {
                     "force_fullbright": window1_2_fullbright,
                 },
             }
-        }
+        },
+        "e4m7": {
+            "textures": {
+                "light1_2": {
+                    "sample_as_light": True,
+                },
+            }
+        },
     }
 }
 
