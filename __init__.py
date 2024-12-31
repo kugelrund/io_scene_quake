@@ -21,10 +21,12 @@ import bpy.props
 import bpy_extras
 
 path = os.path.join(os.path.dirname(__file__), 'extra_fullbright')
+dem5_3_fullbright = np.loadtxt(os.path.join(path, 'dem5_3.txt'))
 tlight05_fullbright = np.loadtxt(os.path.join(path, 'tlight05.txt'))
 tlight10_fullbright = np.loadtxt(os.path.join(path, 'tlight10.txt'))
 light1_1_fullbright = np.loadtxt(os.path.join(path, 'light1_1.txt'))
 light1_2_fullbright = np.loadtxt(os.path.join(path, 'light1_2.txt'))
+light1_3_fullbright = np.loadtxt(os.path.join(path, 'light1_3.txt'))
 light1_5_fullbright = np.loadtxt(os.path.join(path, 'light1_5.txt'))
 light1_7_fullbright = np.loadtxt(os.path.join(path, 'light1_7.txt'))
 light3_5_fullbright = np.loadtxt(os.path.join(path, 'light3_5.txt'))
@@ -33,11 +35,13 @@ light3_7_fullbright = np.loadtxt(os.path.join(path, 'light3_7.txt'))
 light3_8_fullbright = np.loadtxt(os.path.join(path, 'light3_8.txt'))
 window1_2_fullbright = np.loadtxt(os.path.join(path, 'window1_2.txt'))
 window03_fullbright = np.loadtxt(os.path.join(path, 'window03.txt'))
+flame_fullbright = np.loadtxt(os.path.join(path, 'flame.txt'))
+flame2_fullbright = np.loadtxt(os.path.join(path, 'flame2.txt'))
 
 config = {
     "do_materials": True,
     "use_lightmap": False,
-    "hide_view_entity": False,
+    "hide_view_entity": True,
     "models": {
         "__default__": {
             "sample_as_light": False,
@@ -57,26 +61,143 @@ config = {
             "force_fullbright": True,
         },
         "flame": {
-            "sample_as_light": True,
-            "strength": 5000,
+            "cam_strength": 10,
+            "strength": 1000,
+            "force_fullbright": flame_fullbright,
+            "flicker": 2.0,
+            "tint": [1, 0.655, 0.355, 1.0],
+            "flame_triset0": {
+                "point_light": True,
+            },
+            "flame_triset1": {
+                "point_light": True,
+            },
+            "flame_triset2": {
+                "point_light": True,
+            },
+            "flame_triset3": {
+                "point_light": True,
+            },
+            "flame_triset4": {
+                "point_light": True,
+            },
+            "flame_triset6": {
+                "point_light": True,
+            },
         },
         "flame2": {
-            "sample_as_light": True,
-            "strength": 5000,
+            "cam_strength": 10,
+            "strength": 3000,
+            "force_fullbright": flame2_fullbright,
+            "point_light": True,
+            "flicker": 2.0,
+            "tint": [1, 0.655, 0.355, 1.0],
         },
         "lavaball": {
+            "cam_strength": 5,
             "strength": 1000,
+            "point_light": True,
+            "tint": [1, 0.213, 0.037],
+            "flicker": 1.0,
         },
         "missile": {
-            "strength": 5000,  # rocket fire trail
-            "cam_strength": 2,
+            "cam_strength": 10,
+            "strength": 10,
+            "missile_triset0": {
+                "point_light": True,
+                "flicker": 1.0,
+                "tint": [1, 0.5, 0.25],
+                "strength": 3000,  # rocket fire trail
+            },
+        },
+        "laser": {
+            "cam_strength": 3,
+            "strength": 3,
+            "point_light": True,
+            "flicker": 1.0,
+            "tint": [1, 0.2, 0.0],
+            "strength": 1000,
+        },
+        "k_spike": {
+            "cam_strength": 4,
+            "strength": 4,
+            "point_light": True,
+            "flicker": 1.0,
+            "tint": [1, 0.3, 0.0],
+            "strength": 500,
         },
         "grenade": {
             "strength": 100,  # grenade glow
         },
-        "player": {
-            "strength": 100,  # muzzle flash
+        "v_shot": {
+            "cam_strength": 5,
+            "strength": 5,
+            "v_shot_triset0": {
+                "anim_interpolation": 'CONSTANT',  # muzzle flash
+                "point_light": True,
+                "point_light_hide_in_pose": [0, 2, 3, 4, 5, 6, 7],
+                "tint": [1, 0.5, 0.25],
+                "strength": 500,
+            },
         },
+        "v_shot2": {
+            "cam_strength": 5,
+            "strength": 5,
+            "v_shot2_triset4": {
+                "anim_interpolation": 'CONSTANT',  # muzzle flash
+                "point_light": True,
+                "point_light_hide_in_pose": [0, 2, 3, 4, 5, 6, 7],
+                "tint": [1, 0.5, 0.25],
+                "strength": 500,
+            },
+        },
+        "v_nail": {
+            "cam_strength": 5,
+            "strength": 5,
+            "v_nail_triset0": {
+                "anim_interpolation": 'CONSTANT',  # muzzle flash
+                "point_light": True,
+                "point_light_hide_in_pose": [0, 3, 4, 5, 6, 7],
+                "tint": [1, 0.5, 0.25],
+                "strength": 500,
+            },
+        },
+        "v_nail2": {
+            "cam_strength": 5,
+            "strength": 5,
+            "v_nail_triset5": {
+                "anim_interpolation": 'CONSTANT',  # muzzle flash
+                "point_light": True,
+                "point_light_hide_in_pose": [0],
+                "tint": [1, 0.5, 0.25],
+                "strength": 500,
+            },
+        },
+        "v_rock": {
+            "cam_strength": 5,
+            "strength": 5,
+            "v_rock_triset1": {
+                "anim_interpolation": 'CONSTANT',  # muzzle flash
+                "point_light": True,
+                "point_light_hide_in_pose": [0, 2, 3, 4, 5, 6, 7],
+                "tint": [1, 0.5, 0.25],
+                "strength": 500,
+            },
+        },
+        "v_rock2": {
+            "cam_strength": 5,
+            "strength": 5,
+            "v_rock2_triset0": {
+                "anim_interpolation": 'CONSTANT',  # muzzle flash
+                "point_light": True,
+                "point_light_hide_in_pose": [0, 2, 3, 4, 5, 6, 7],
+                "tint": [1, 0.5, 0.25],
+                "strength": 500,
+            },
+        },
+        #"player": {
+        #    "strength": 100,  # muzzle flash
+        #},
     },
     "maps": {
         "__default__": {
@@ -98,16 +219,40 @@ config = {
                 "+0basebtn": {
                     "strength": 250,
                 },
+                "*water0": {
+                    "opacity": 0.5,
+                },
+                "*04water1": {
+                    "opacity": 0.5,
+                },
+                "*04awater1": {
+                    "opacity": 0.5,
+                },
+                "*04mwat1": {
+                    "opacity": 0.5,
+                },
+                "*04mwat2": {
+                    "opacity": 0.5,
+                },
+                "*slime": {
+                    "opacity": 0.75,
+                },
                 "*lava1": {
-                    "strength": 100,
+                    "strength": 30,
                 },
                 "*teleport": {
-                    "strength": 5000,
+                    "strength": 3000,
                     "cam_strength": 5,
                     "force_fullbright": True,
+                    "sample_as_light": True,
+                },
+                "key03_1": {
+                    "strength": 200,
+                    "sample_as_light": True,
                 },
                 "key03_02": {
                     "strength": 200,
+                    "sample_as_light": True,
                 },
                 "light1_1": {
                     "strength": 250,
@@ -119,20 +264,29 @@ config = {
                     "force_fullbright": light1_2_fullbright,
                     "tint_hsv": [0.5, 0.333, 1],
                 },
+                "light1_3": {
+                    "strength": 100,
+                    "force_fullbright": light1_3_fullbright,
+                    "tint_hsv": [0.5, 0.85, 1],
+                },
                 "light1_4": {
                     "strength": 250,
                     "force_fullbright": light1_7_fullbright,
+                    "sample_as_light": True,
                 },
                 "light1_5": {
                     "strength": 250,
                     "force_fullbright": light1_5_fullbright,
+                    "sample_as_light": True,
                 },
                 "light1_7": {
                     "strength": 250,
                     "force_fullbright": light1_7_fullbright,
                 },
                 "light1_8": {
-                    "strength": 250,
+                    "cam_strength": 1.5,
+                    "strength": 300,
+                    "tint_hsv": [0.5, 0.9, 1],
                     "force_fullbright": light1_7_fullbright,
                 },
                 "light3_3": {
@@ -140,20 +294,32 @@ config = {
                     "force_fullbright": light1_7_fullbright,
                 },
                 "light3_5": {
+                    "cam_strength": 5,
                     "strength": 250,
                     "force_fullbright": light3_5_fullbright,
+                    "sample_as_light": True,
                 },
                 "light3_6": {
+                    "cam_strength": 5,
                     "strength": 250,
                     "force_fullbright": light3_6_fullbright,
+                    "sample_as_light": True,
                 },
                 "light3_7": {
+                    "cam_strength": 5,
                     "strength": 250,
                     "force_fullbright": light3_7_fullbright,
+                    "sample_as_light": True,
                 },
                 "light3_8": {
                     "strength": 250,
                     "force_fullbright": light3_8_fullbright,
+                    "sample_as_light": True,
+                },
+                "dem5_3": {
+                    "strength": 500,
+                    "force_fullbright": dem5_3_fullbright,
+                    "sample_as_light": True,
                 },
                 "+0_med25": {
                     "strength": 100,
@@ -182,6 +348,10 @@ config = {
                 "rune_a": {
                     "strength": 50,
                 },
+                "sky1": {
+                    "strength": 100,
+                    "tint_hsv": (0.5, 0.6666666, 1),
+                },
                 "sky4": {
                     "strength": 50,
                     "tint_hsv": (0.5, 0.5, 1),
@@ -196,12 +366,13 @@ config = {
                     "strength": 100,
                 },
                 "tlight01": {
-                    "strength": 2000,
+                    "strength": 1500,
                     "tint": [1, 0.8, 1, 1],
                     "sample_as_light": True,
                 },
                 "tlight02": {
-                    "strength": 500,
+                    "strength": 150,
+                    "sample_as_light": True,
                 },
                 "tlight05": {
                     "strength": 1000,
@@ -237,12 +408,13 @@ config = {
                     "force_fullbright": True,
                 },
                 "window03": {
-                    "strength": 500,
+                    "strength": 1000,
                     "force_fullbright": window03_fullbright,
                     "tint_hsv": [0.5, 0.5, 1],
+                    "sample_as_light": True,
                 },
                 "window1_2": {
-                    "strength": 1500,
+                    "strength": 1000,
                     "force_fullbright": window1_2_fullbright,
                     "sample_as_light": True,
                 },
@@ -253,6 +425,108 @@ config = {
                 "wizwin1_2": {
                     "strength": 1500,
                     "force_fullbright": window1_2_fullbright,
+                },
+            }
+        },
+        "e1m6": {
+            "textures": {
+                "*lava1": {
+                    "sample_as_light": True,
+                },
+            }
+        },
+        "e1m8": {
+            "textures": {
+                "*lava1": {
+                    "sample_as_light": True,
+                },
+            }
+        },
+        "e2m1": {
+            "textures": {
+                "tlight07": {
+                    "strength": 500,
+                    "sample_as_light": True,
+                },
+                "sky4": {
+                    "strength": 0,
+                    "cam_strength": 0,
+                },
+            }
+        },
+        "e2m2": {
+            "textures": {
+                "window01_2": {
+                    "sample_as_light": True,
+                },
+                "window01_3": {
+                    "sample_as_light": True,
+                },
+                "wizwin1_2": {
+                    "sample_as_light": True,
+                },
+            }
+        },
+        "e3m3": {
+            "textures": {
+                "*lava1": {
+                    "strength": 50,
+                },
+                "metal6_3": {
+                    "sample_as_light": True,
+                },
+                "sky4": {
+                    "strength": 100,
+                },
+            }
+        },
+        "e3m4": {
+            "textures": {
+                "light1_8": {
+                    "sample_as_light": True,
+                },
+                "light3_3": {
+                    "sample_as_light": True,
+                },
+                "light3_8": {
+                    "strength": 500,
+                },
+            }
+        },
+        "e3m5": {
+            "textures": {
+                "light1_8": {
+                    "sample_as_light": True,
+                },
+            }
+        },
+        "e4m2": {
+            "textures": {
+                "window03": {
+                    "strength": 300,
+                    "force_fullbright": window03_fullbright,
+                    "sample_as_light": True,
+                },
+            }
+        },
+        "e4m3": {
+            "textures": {
+                "*lava1": {
+                    "strength": 10,
+                },
+            }
+        },
+        "e4m4": {
+            "textures": {
+                "light1_1": {
+                    "sample_as_light": True,
+                },
+            }
+        },
+        "e4m6": {
+            "textures": {
+                "light1_3": {
+                    "sample_as_light": True,
                 },
             }
         },
@@ -286,13 +560,36 @@ class ImportQuakeDemo(bpy.types.Operator, bpy_extras.io_utils.ImportHelper):
     def execute(self, context):
         preferences = context.preferences.addons[__name__].preferences
         fs = pak.Filesystem(preferences.pak_directory)
-        if "dem" in self.filepath:
-            with open(self.filepath, 'rb') as demo_file:
-                pyquake.blenddemo.add_demo(demo_file, fs, config, self.fps)
-            return {'FINISHED'}
-        else:
-            self.report({'ERROR'}, "Selected file does not contain 'wow'!")
-            return {'CANCELLED'}
+        with open(self.filepath, 'rb') as demo_file:
+            pyquake.blenddemo.add_demo(demo_file, fs, config, self.fps, fov=130)
+        render_fps = 60
+        assert (self.fps / render_fps).is_integer()
+        context.scene.sync_mode = 'FRAME_DROP'
+        context.scene.render.engine = 'CYCLES'
+        context.scene.cycles.device = 'GPU'
+        context.scene.cycles.use_animated_seed = True
+        context.scene.frame_step = int(self.fps / render_fps)
+        context.scene.render.fps = self.fps
+        context.scene.render.resolution_x = 2560
+        context.scene.render.resolution_y = 1080
+        context.scene.render.use_motion_blur = True
+        context.scene.render.motion_blur_shutter *= self.fps / render_fps
+        context.scene.render.use_persistent_data = True
+        context.scene.world.cycles.homogeneous_volume = True
+
+        context.scene.render.use_overwrite = False
+        context.scene.render.image_settings.color_mode = 'RGB'
+        context.scene.render.image_settings.color_depth = '16'
+
+        world_material = context.scene.world.node_tree
+        world_material.links.clear()
+        world_material.nodes.clear()
+        node_output = world_material.nodes.new('ShaderNodeOutputWorld')
+        node_volume = world_material.nodes.new('ShaderNodeVolumePrincipled')
+        node_volume.inputs['Density'].default_value = 0.02
+        world_material.links.new(node_volume.outputs[0], node_output.inputs['Volume'])
+
+        return {'FINISHED'}
 
 
 class ImportQuakePreferences(bpy.types.AddonPreferences):
